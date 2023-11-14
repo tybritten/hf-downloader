@@ -12,7 +12,7 @@ local args(dataset_name, revision) =
 
 function(name, dataset_name, secretName, revision="")
 {
-  pipeline: { name: "hf-downloader-"+name },
+  pipeline: { name: name },
   description: "Download HF Dataset: "+dataset_name,
   transform: {
     cmd: [ "python3", "/app/dataset-downloader.py" ] + args(dataset_name, revision),
