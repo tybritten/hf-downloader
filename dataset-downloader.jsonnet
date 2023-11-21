@@ -16,7 +16,7 @@ function(name, dataset_name, secretName, revision="")
   description: "Download HF Dataset: "+dataset_name,
   transform: {
     cmd: [ "python3", "/app/dataset-downloader.py" ] + args(dataset_name, revision),
-    image: "vmtyler/hfdownloader:v0.0.1",
+    image: "vmtyler/hfdownloader:v0.0.2",
     secrets: [
         {
           name: secretName,
@@ -24,6 +24,10 @@ function(name, dataset_name, secretName, revision="")
           key: 'HF_HOME',
         },
       ],
+    "env": {
+        "PYTHONUNBUFFERED": "1",
+        "HF_HUB_DISABLE_PROGRESS_BARS": "true",
+    },
     },
     input: {
       cron: {

@@ -18,6 +18,7 @@ def main(output_dir, dataset_name, dataset_revision=None):
         repo_type="dataset",
         local_dir=output_dir,
         revision=dataset_revision,
+        local_dir_use_symlinks=False,
     )
 
     print(f"Dataset '{dataset_name}' downloaded and saved to '{output_dir}'.")
