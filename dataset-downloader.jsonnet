@@ -6,17 +6,17 @@
 // secretName   : Secret name with a Read-only HuggingFace API token with a key of HF_HOME
 // revision     : revision of the dataset to use (optional)
 // 
-local args(dataset_name, revision) = 
-    local localargs = ["--dataset_name", dataset_name,"--output_dir", "/pfs/out"];
-    if revision != "" then localargs +["--dataset_revision", revision] else localargs;
+local args(hf_name, revision, type) = 
+    local localargs = ["--name", hf_name, "--type", type, "--output_dir", "/pfs/out"];
+    if revision != "" then localargs +["--revision", revision] else localargs;
 
-function(name, dataset_name, secretName, revision="")
+function(name, hf_name, secretName, revision="", type="dataset", disable_progress="false")
 {
   pipeline: { name: name },
-  description: "Download HF Dataset: "+dataset_name,
+  description: "Download HF Dataset: "+name,
   transform: {
-    cmd: [ "python3", "/app/dataset-downloader.py" ] + args(dataset_name, revision),
-    image: "vmtyler/hfdownloader:v0.0.2",
+    cmd: [ "python3", "/app/dataset-downloader.py" ] + args(hf_name, revision, type),
+    image: "vmtyler/hfdownloader:v0.0.5",
     secrets: [
         {
           name: secretName,
@@ -26,9 +26,10 @@ function(name, dataset_name, secretName, revision="")
       ],
     "env": {
         "PYTHONUNBUFFERED": "1",
-        "HF_HUB_DISABLE_PROGRESS_BARS": "true",
+        "HF_HUB_DISABLE_PROGRESS_BARS": disable_progress,
     },
     },
+    autoscaling: "true",
     input: {
       cron: {
         name: 'cron',

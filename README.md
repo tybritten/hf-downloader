@@ -1,12 +1,14 @@
-# Huggingface Dataset Downloader
+# Huggingface Downloader
 
-Simple Pachyderm Pipeline template to download a huggingface dataset to a repo.
+Simple Pachyderm Pipeline template to download a huggingface dataset or model to a repo.
 
 ### Template arguments:
 * `name`- Pipeline name
 * `secretName`- Kubernetes secret with hugggingface token
-* `dataset_name`- Name of the hugggingface dataset to download
+* `type`- The type of download `model` or `dataset`
+* `hf_name`- Name of the hugggingface dataset or model to download
 * `revision`- (Optional) a specific revision of the dataset you want to download
+* `disable_progress`- (Optional) set to `true` to disable progress logging
 
 
 ### Example Usage:
@@ -17,7 +19,7 @@ Simple Pachyderm Pipeline template to download a huggingface dataset to a repo.
     ```
      pachctl create pipeline \
      --jsonnet https://raw.githubusercontent.com/tybritten/hf-dataset-downloader/main/dataset-downloader.jsonnet \
-     --arg name="hf-downloader-CodeAlpaca_20k" --arg dataset_name="HuggingFaceH4/CodeAlpaca_20K" --arg secretName=hugging-face-token
+     --arg name="hf-downloader-CodeAlpaca_20k" --arg hf_name="HuggingFaceH4/CodeAlpaca_20K" --arg secretName=hugging-face-token
    ```
 3. This creates a cron pipeline with a spec of never. So to run it you'll run:
    ```

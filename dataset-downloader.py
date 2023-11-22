@@ -3,25 +3,19 @@ import os, sys
 import argparse
 
 
-def download_and_save_dataset(dataset_name, api_key, save_path):
-    # Set Hugging Face API key
-    os.environ["HF_HOME"] = api_key
-
-    # Load the dataset
-
-
-def main(output_dir, dataset_name, dataset_revision=None):
+def main(output_dir, name, hf_type, revision=None):
     os.makedirs(output_dir, exist_ok=True)
 
     snapshot_download(
-        repo_id=dataset_name,
-        repo_type="dataset",
+        token=os.environ["HF_HOME"],
+        repo_id=name,
+        repo_type=hf_type,
         local_dir=output_dir,
-        revision=dataset_revision,
+        revision=revision,
         local_dir_use_symlinks=False,
     )
 
-    print(f"Dataset '{dataset_name}' downloaded and saved to '{output_dir}'.")
+    print(f"{hf_type} named '{name}' downloaded and saved to '{output_dir}'.")
 
 
 if __name__ == "__main__":
@@ -29,18 +23,24 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output_dir",
         default="output",
-        help="Name of output directory that stores the dataset",
+        help="Name of output directory that stores the output",
     )
     parser.add_argument(
-        "--dataset_name",
+        "--name",
         type=str,
-        help="Name of the Hugging Face dataset",
+        help="Name of the Hugging Face dataset/model",
     )
     parser.add_argument(
-        "--dataset_revision",
+        "--revision",
         type=str,
         default=None,
-        help="Revision of the dataset (optional)",
+        help="Revision of the dataset/model (optional)",
+    )
+    parser.add_argument(
+        "--type",
+        type=str,
+        default="dataset",
+        help="Type of download (dataset or model)",
     )
 
     args = parser.parse_args()
@@ -51,6 +51,7 @@ if __name__ == "__main__":
         sys.exit(1)
     main(
         output_dir=args.output_dir,
-        dataset_name=args.dataset_name,
-        dataset_revision=args.dataset_revision,
+        name=args.name,
+        hf_type=args.type,
+        revision=args.revision
     )
