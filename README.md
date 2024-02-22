@@ -9,7 +9,8 @@ Simple Pachyderm Pipeline template to download a huggingface dataset or model to
 * `hf_name`- Name of the hugggingface dataset or model to download
 * `revision`- (Optional) a specific revision of the dataset you want to download
 * `disable_progress`- (Optional) set to `true` to disable progress logging
-
+* `allow_patterns` - (Optional) allow patterns for the download comma separated `"data/*,*.json"`
+* `ignore_patterns` - (Optional) ignore patterns for the download comma separated `"data/*,*.json"`
 
 ### Example Usage:
 

@@ -3,7 +3,7 @@ import os, sys
 import argparse
 
 
-def main(output_dir, name, hf_type, revision=None):
+def main(output_dir, name, hf_type, revision=None, allow=[], ignore=[]):
     os.makedirs(output_dir, exist_ok=True)
 
     snapshot_download(
@@ -12,13 +12,18 @@ def main(output_dir, name, hf_type, revision=None):
         repo_type=hf_type,
         local_dir=output_dir,
         revision=revision,
+        allow_patterns=allow,
+        ignore_patterns=ignore,
         local_dir_use_symlinks=False,
     )
 
     print(f"{hf_type} named '{name}' downloaded and saved to '{output_dir}'.")
 
+def list_of_strings(arg):
+    return arg.split(',')
 
 if __name__ == "__main__":
+    
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--output_dir",
@@ -42,6 +47,17 @@ if __name__ == "__main__":
         default="dataset",
         help="Type of download (dataset or model)",
     )
+    parser.add_argument(
+        "--ignore_patterns",
+        type=list_of_strings,
+        help="Optional: File patters to ignore in the download. Default is none.",
+    )
+    parser.add_argument(
+        "--allow_patterns",
+        type=list_of_strings,
+        help="Optional: File patters to allow in the download. Default is all files.)",
+    )
+
 
     args = parser.parse_args()
     if "HF_HOME" not in os.environ or not os.environ:
@@ -53,5 +69,7 @@ if __name__ == "__main__":
         output_dir=args.output_dir,
         name=args.name,
         hf_type=args.type,
-        revision=args.revision
+        revision=args.revision,
+        allow=args.allow_patterns,
+        ignore=args.ignore_patterns
     )
