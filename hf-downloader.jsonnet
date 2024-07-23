@@ -26,9 +26,9 @@ args:
   type: string
   default: output.csv
 - name: disable_progress
-  description: Whether or not to show progress in the logs.
-  type: boolean
-  default: false
+  description: Whether or not to show progress in the logs. "true" to enable.
+  type: string
+  default: "false"
 - name: allow_patterns
   description: (Optional) allow patterns for the download comma separated `"data/*,*.json"
   type: string
